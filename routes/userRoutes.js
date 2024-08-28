@@ -1,6 +1,8 @@
 const express = require('express');
 const router = express.Router();
-const User = require('./models/User'); // Path to your User model
+const Users = require('../models/users');
+
+
 
 /*
     TODO: Make the algorithm like this:
@@ -21,29 +23,34 @@ const User = require('./models/User'); // Path to your User model
     }
 */
 
-// Route to save or update user data
-router.post('/login', async (req, res) => {
-  const { name, picture, sub } = req.body;
-
+router.get('/users', async (req, res) => {
   try {
-    // Check if the user already exists
-    let user = await User.findOne({ sub });
-
-    if (!user) {
-      // Create a new user if they don't exist
-      user = new User({ name, picture, sub });
-      await user.save();
+    const user = await Users.find({sub: "92yri4ur3h4jb4378"})
+    if (user) {
+      res.status(200).json(user);
+      
     } else {
-      // Update the user data if they exist
-      user.name = name;
-      user.picture = picture;
-      await user.save();
+      res.status(404).json({ message: 'User not found' });
     }
-
-    res.status(200).json({ message: 'User logged in successfully', user });
   } catch (error) {
     res.status(500).json({ message: 'Server error', error });
   }
 });
+
+router.post('/users', async (req, res) => {
+  const { sub, name, username, email, imageUrl, bio } = req.body;
+
+  try {
+
+    const newUser = new Users({ sub, name, username, email, imageUrl, bio });
+    await newUser.save();
+
+    res.status(201).json(newUser);
+  } catch (error) {
+    res.status(500).json({ message: 'Server error', error });
+  }
+});
+
+
 
 module.exports = router;

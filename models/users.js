@@ -1,14 +1,15 @@
-// models/Users.js
 const mongoose = require('mongoose');
 
-const userSchema = new mongoose.Schema({
+const UserSchema = new mongoose.Schema({
+  sub: { type: String, unique: true, required: true },
   name: { type: String, required: true },
-  username: { type: String, required: true, unique: true },
-  email: { type: String, required: true, unique: true },
-  bio: String,
-  imageUrl: String,
-  posts: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Posts' }],
-  liked: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Likes' }]
+  username: { type: String, required: true },
+  email: { type: String, required: true },
+  imageUrl: { type: String, required: true },
+  bio: { type: String, default: null },
 });
 
-module.exports = mongoose.model('Users', userSchema);
+const Users = mongoose.model('Users', UserSchema);
+
+module.exports = Users;
+
